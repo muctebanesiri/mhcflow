@@ -2,11 +2,9 @@
 
 ## Introduction
 
-`mhcflow` is the original
-[polysolver](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4747795/) HLA
-typing algorithm re-engineered in modern style. It offers almost all aspects
-of the original algorithm, adds new features, runs faster, and is friendly to
-pipeline integration.
+MHC class I and II typing workflow including fishing, realigning, and typing that
+generates results ready for detection of HLA loss of heterozygosity (LOH) and
+peptide binding prediction.
 
 ## Features
 
@@ -24,12 +22,12 @@ pipeline integration.
 
 ## Installation
 
-Please refer to [INSATLL](INSTALL.md) for details.
+More details coming soon..
 
 ## License
 
 - `mhcflow` respects all LICENSE requirement imposed by the original
-  `Polysolver` software, and is licensed under GPL-3.
+  `Polysolver` software, and is licensed under MIT.
 
 ## Disclaimer
 
