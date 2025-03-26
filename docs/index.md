@@ -2,48 +2,53 @@
 
 ## Introduction
 
-MHC class I and II typing workflow including fishing, realigning, and typing that
-generates results ready for detection of HLA loss of heterozygosity (LOH) and
-peptide binding prediction.
+`mhcflow` is an end-to-end workflow designed to accurately genotype
+MHC class I and II alleles. It streamlines the process of generating
+analysis-ready outputs that support both HLA loss of heterozygosity (LOH)
+detection and peptide binding prediction.
 
 ## Features
 
+`mhcflow` builds upon the well-established Polysolver algorithm,
+adding modern enhancements and additional functionality:
+
 - Supports both class I and
   [II](https://github.com/svm-zhang/mhcflow?tab=readme-ov-file#extend-to-class-ii-typing)
-  typing with good
-  [accuracy](https://github.com/svm-zhang/hla_benchmark?tab=readme-ov-file)
-- Generates analysis-ready HLA alignments for HLALOH detection
-- Re-engineered in modern style with
-  - Modular design
-  - Runtime speedup
-  - Minimum I/O operations
-  - Minimum hard-coded code
-  - Easy integration to pipeline with packaging and better CLI
+  typing
+
+    mhcflow expands on original approach by supporting both class I
+  and class II typing while maintaining high accuracy.
+
+- Modern, modular design
+    - Re-engineered with a modular architecture for better flexibility and maintainability
+
+    - Streamlined workflows that minimize I/O operations
+
+    - Optimized runtime, ensuring faster analysis without compromising quality
+
+    - Minimal hard-coded logic, facilitating easier customization and integration
+
+- User-friendly integration
+
+    Easily incorporate `mhcflow` into modern whole-genome, whole-exome
+    pipelines through its command line interface.
+
+- Analysis-ready
+
+    Generates results can be directly used for HLA LOH detection and
+    peptide binding prediction.
 
 ## Installation
 
-More details coming soon..
+Starting from `v0.2.0`, `mhcflow` can be installed from PyPI:
 
-## License
+```bash
+pip install mhcflow
+```
 
-- `mhcflow` respects all LICENSE requirement imposed by the original
-  `Polysolver` software, and is licensed under MIT.
+If you prefer to use the shell script implementation, please refer to the
+instruction on the [Installation](https://svm-zhang.github.io/mhcflow/install) page.
 
-## Disclaimer
-
-- I, by no means, intend to overtake the origianl idea and implementation
-  of `Polysolver` algorithm.
-- This repo does not distribute `Polysolver` software, as well as all
-  its dependencies such as `novoalign` and `novoindex` under commercial licenses.
-- `mhcflow` re-engineered only the HLA typing algorithm. All other
-  tools in the `Polysolver` suite was not modified and included in this repo.
-- `mhcflow` does not necessarily produce identical result as
-  `Polysolver` on typing HLA class I alleles.
-- Please interpret result at your own discretion when using
-  `mhcflow`.
-  [`hla_benchmark`](https://github.com/svm-zhang/hla_benchmark) repo provides
-  fundamental assessment of `mhcflow` using 1000 genome data on HLA-A,
-  HLA-B, HLA-C, HLA-DQB1, and HLA-DRB1.
 
 ## Citation
 
