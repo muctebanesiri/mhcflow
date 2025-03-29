@@ -62,15 +62,15 @@ file will be used. Additionally, ensure that the coordinates are based on the
 same genome build used for genomic alignment. Note that `mhcflow` extracts all reads
 mapped to regions specified in the BED file, regardless of whether a Kmer
 pattern is present. Below is an example set of intervals for MHC class II genes
-included in the `class2.chr_prefix_free.bed` file.
+(based on `hg19`) included in the `class2.chr_prefix_free.bed` file.
 
-```text
-6	32489683	32557613
-6	32605183	32614839
-6	32627241	32634466
-6	33032346	33048555
-6	33043767	33057473
-```
+|    |           |           |
+| :- | :-------  |  :------- |
+| 6  | 32489683  | 32557613  |
+| 6  | 32605183  | 32614839  |
+| 6  | 32627241  | 32634466  |
+| 6  | 33032346  | 33048555  |
+| 6  | 33043767  | 33057473  |
 
 ### Allele population frequency
 
@@ -79,19 +79,21 @@ Provide a table of population frequencies for the supertype of HLA alleles
 is a snapshot of first 4 class I supertype alleles in the `HLA_FREQ.txt` file
 provided by `polysolver`:
 
-```text
-Allele	Caucasian	Black	Asian
-hla_a_01_01	0.143	0.047	0.012
-hla_a_01_02	0.000	0.006	0.000
-hla_a_01_03	0.000	0.001	0.000
-hla_a_01_04n	0.000	0.000	0.000
-```
+
+| Allele        | Caucasian | Black | Asian |
+| :------------ | :-------  | :-----| :---- |
+| hla_a_01_01   | 0.143     | 0.047 | 0.012 |
+| hla_a_01_02   | 0.000     | 0.006 | 0.000 |
+| hla_a_01_03   | 0.000     | 0.001 | 0.000 |
+| hla_a_01_04n   | 0.000     | 0.000 | 0.000 |
+
 
 Each row represents one allele, while each column corresponds to a population
 group.
 
 Note that `mhcflow` (more specifically, its underlying component `mhctyper`)
-will only type alleles with a non-zero cross-population frequency.
+will only type alleles with a non-zero cross-population frequency. In the
+example shown above, supertyper `hla_a_01_04n` will not be typed.
 
 You can also create a custom population frequency table by providing a list of
 supertypes with "simulated" allele frequencies. These simulated frequencies act
