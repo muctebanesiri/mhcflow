@@ -2,7 +2,6 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/mhcflow)](https://pypi.org/project/mhcflow/)
 ![Python versions](https://img.shields.io/pypi/pyversions/mhcflow)
-[![PyPI Downloads](https://img.shields.io/pypi/dm/mhcflow)](https://pypistats.org/packages/mhcflow)
 ![License](https://img.shields.io/pypi/l/mhcflow)
 
 MHC class I and II typing workflow including fishing, realigning, and typing that
@@ -11,7 +10,7 @@ peptide binding prediction.
 
 ## Installation
 
-Starting from `v0.2.0`, mhcflow can be installed from PyPI:
+Starting from `v0.2.0`, `mhcflow` can be installed from PyPI:
 
 ```bash
 pip install mhcflow
