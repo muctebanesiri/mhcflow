@@ -46,12 +46,14 @@ NA18740_class1
     - `NA18740.fisher.chr6.idx`: Similar as above but from unplaced reads.
     - `NA18740.fisher.hla_bed.idx`: Contains reads mapped to the HLA regions
     defined in the BED file.
-- `*.file_manifest.json`: The file manifest in JSON format, which provides
-    detaled information about:
+- `NA18740.fisher.file_manifest.json`: The file manifest for the `fisher`
+    component in JSON format, which provides detailed information about:
     - input files
     - output files
     - Auxiliary files, such as `.log` and `.done` files
     - intermediate and intermediate auxiliary files.
+- `NA18740.dumper.file_manifest.json`: The file manifest for the `dumper` step
+    inside the `fisher` component. 
 
 !!! note
     For more details on file manifests and the files under `log/` directory,
