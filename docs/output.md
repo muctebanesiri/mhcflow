@@ -64,5 +64,17 @@ NA18740_class1
 
 ## typer
 
+All typing results are stored in the `typer/` directory, as shown below.
+For a detailed explanation of each file, please refer to the
+[mhctyper documentation](https://svm-zhang.github.io/mhctyper/#output-explain).
+
+``` { .sh }
+NA18740_class1
+├─ typer/
+│  ├─ NA18740.a1.tsv
+│  ├─ NA18740.a2.tsv
+│  ├─ NA18740.hlatyping.res.tsv
+```
+
 ## finalizer
 
