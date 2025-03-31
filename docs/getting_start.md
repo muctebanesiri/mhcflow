@@ -142,7 +142,8 @@ The `finalizer` directory contains the reference sequence for typed alleles for
 sample NA18740 in Fasta format, along with the realignments against these
 alleles. Both files can be directly used for HLA loss-of-heterozygosity detection.
 
-For a detailed walkthrough of the output, please refer to this page.
+For a detailed walkthrough of the output, please refer to the
+[Explain Output page](https://svm-zhang.github.io/mhcflow/output/).
 
 
 
