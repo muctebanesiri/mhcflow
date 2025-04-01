@@ -80,7 +80,6 @@ nav:
   - Installation: install.md
   - Getting Started: getting_start.md
   - Explain Output: output.md
-  - Step-by-step: step_by_step.md
+  - Behind the scene: step_by_step.md
   - MHC class II: class_ii.md
-  - HLA loss of heterozygosity: loh.md
   - Disclaimer: disclaimer.md
