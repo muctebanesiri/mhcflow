@@ -1,134 +1,91 @@
-# Run mhcflow step-by-step
+# Behind the scene
 
-`mhcflow` comes with modular design. It generally consists of
-4 steps: `fishing`, `realigning`, `typing`, and `finalizing`. Each
-module implements basic break-and-continue mechanism, meaning that module
-finished previously will be automatically skipped. Each of these modules
-can be easily integrated as a task into a workflow.
+`mhcflow` features a modular design and is composed of
+four components: `fisher`, `realigner`, `typer`, and `finalizer`. The purpose
+of this page is to address the following questions:
 
-The `mhcflow.sh` script and `mhcflow` binary (after building the package)
-demonstrates each following step, if you are interested.
+- What does each component do?
+- Which filter(s) are used (both explicitly and implicitly)?
+- What are the limitations of the current implementation?
 
-## Fisherman: fishing HLA-relevant reads
+## Fisher
 
-The original `polysolver` algorithm fishes HLA-related reads via matching
-pre-built kmer (tag) sequence and extracting alignments mapped to regions where
-HLA class I allele located. `mhcflow` follows the same strategy and speeds
-it up.
+The `fisher` component extracts reads sequenced from DNA molecules originating
+from MHC class I and II genes. It employs two primary strategies to identify
+HLA-derived reads:
 
-``` bash
-fisher --mode faster \
-  --tag abc_v14.uniq \
-  --bed class1.bed \
-  --bam NA12046.so.bam \
-  --sample NA12045 \
-  --out "$PWD/NA12046_class1/fisher/NA12046.fqs.list.txt"
-```
+- Reads with Kmer sequence matches
+- Reads mapped to the HLA regions specified in a BED file
 
-The result is plain text file with two lines of fished fastq files
-(paired-end reads).
+### Kmer-matching reads
 
-It is important to note there are other approches to fish HLA-relevant reads.
-For instance, `Optitype` aligns trimmed reads against the HLA reference using
-`razerS3`. From my experience, direct alignment finds more reads and these
-reads tend to align better. However, `razerS3` is not quite memory-efficient,
-which in my opinion limits its utility, especially when your computing platform
-is not unlimited. The approach that the original `polysolver` uses provides
-decent fishing result.
+`mhcflow` utilizes the Aho-Corasick algorithm (via the
+[pyahocorasick](https://pypi.org/project/pyahocorasick/) package) to efficiently
+detect reads containing matching Kmer sequences. In this process, only reads
+that are mapped to chromosome 6 or are unplaced in the genomic alignments
+are analyzed. This targeted (greedy) approach is based on
+experiments showing that the vast majority of Kmer-matching reads
+originate from chromosome 6, while reads from other chromosomes contribute
+negligibly. Due to the polymorphic nature of MHC sequences, `mhcflow`
+also examines unplaced reads that have Kmer matches.
 
-## Realigner: realigning fished reads to HLA reference
+!!! note
+    Unplaced reads refer to those that do not have a determined placement
+    anywhere on a given reference-they are not considered unmapped by definition.
 
-Next the realigner module aligns the fished reads against the provided
-class I HLA reference sequence using `novoalign`, same as the original
-`polysolver` program. The difference is the realigner module achieves the
-reaignment process in parallel to speed things up a bit.
+!!! note
+    A limitation of this Kmer fishing strategy is that it only captures
+    reads with exact matches. Consequently, any sequencing errors reduces
+    its efficiency. To compensate for this limitation, 
+    `mhcflow` also extracts all reads from a predefined list of
+    HLA regions (regardless of the presence of Kmer sequence pattern),
+    as described in the next section.
+    
 
-``` bash
-realigner --hla_ref abc_complete.fasta \
-  --fqs "$PWD/NA12046_class1/fisher/NA12046.fqs.list.txt" \
-  --sample NA12046 \
-  --out "$PWD/NA12046_class1/realigner/NA12046.hla.realn.so.bam"
-```
+### Reads from HLA regions
 
-Because the academia version of `novoalign` does not support gzipped fastq
-file, this step can take up some disk space depending on the sample
-sequencing depth that is HLA-related.
+Extracting all reads from a predefined list of HLA regions enables `mhcflow`
+to capture HLA-derived reads that might be missed by the Kmer-fishing process
+due to sequencing errors.
+
+!!! note
+    In its simplest form, you can specify only the regions to the HLA genes you
+    intend to type, which generally produces good results. Alternatively, you
+    may specify additional regions to potentially capture more HLA-derived
+    reads. However, based on experiments with 1000 genome samples, obtaining more
+    fished reads does not necessarily translate to improved typing accuracy.
+
+
+### Other strategies
+
+`mhcflow` implements the original fishing strategy from the `polysolver`
+algorithm, which extracts reads from genomic alignments. There are alternative
+approaches to capturing HLA-derived reads. For example, `Optitype`
+directly aligns all reads from a sequencing sample against the HLA reference.
+
+- Advantages
+    - Captures HLA-derived reads with improved sensitivity. It not only
+        detects a greater number of reads but also identify reads that
+        are more likely to be HLA-derived.
+    - Does not rely on genomic alignment and can be initiated at
+        the begining of a workflow after reads trimming.
+- Disadvantages
+    - HLA-derived reads predominantly originate from
+    chromosome 6, as mentioned earlier.
+    - The razorS3 aligner used by `Optitype` is not memory-efficient. You
+    must find a balance betten the number of threads and
+    per-thread memory usage, which can be challenging with varying
+    sequencing library sizes.
+
+
+## Realigner
+
+Coming soon...
 
 ## Typer: typing HLA class I genotype
 
-The typer module is a complete overhaul of the origial perl scripts
-`first_allele_calculations.pl` and `second_allele_calcuations.pl`. The original
-`polysolver` algorithm types first and second alleles at a locus in two
-separated processes. For each HLA class I allele defined in the HLA reference
-sequence, it outputs a plain text file with scores. This generates thousands of
-files that creates I/O pressure and make the typing process I/O bound. Also,
-it takes about 3-4 script calls to type the first allele and makes it hard to
-track when error happens.
-
-The `pyhlatyper` written in this repo tires to improves on all aspects:
-
-1. Typing two alleles with one program call
-2. Making typing CPU-bound powered by `polars` and `pysam`
-3. Processing alignments to calculate scores in parallel
-4. Enabling possibility of typing alleles class II alleles
-5. Capturing errors in proper way
-6. Free of hard-coded code
-
-``` bash
-pyhlatyper --freq HLA_FREQ.txt \
-  --bam "$PWD/NA12046_class1/realigner/NA12046.hla.realn.so.bam" \
-  --out "$PWD/NA12046_class1/typer/NA12046.hla_typing.res.tsv"
-```
-
-One important difference of `pyhlatyper` from the original typing scripts is
-that it does not actaully use frequency as prior to calculate posterior scores.
-This means the `--race` is always `Unknown`. The choice was made because the race
-is usually not a known factor when dealing with real-world data.
-I probably will remove the `--race` option from CLI for good in the future.
+Coming soon...
 
 ## Finalizer: collecting results
 
-The original `polysolver` finishes after typing is done. `mhcflow` goes
-beyond by providing
-
-1. HLA reference sequence specific to the typed sample
-2. Alignment against the sample HLA reference
-
-The reason to have this additional step is to get analysis-ready result.
-In oncology and/or immuno-oncology research, one of the questions
-people has is to know if there is loss of heterozygosity (LOH) occurring in a tumor
-sample. [LOHHLA](https://bitbucket.org/mcgranahanlab/lohhla/src/master/) is the
-common go-to algorithm to answer the question. However, `lohhla`, before detecting
-any LOH event, goes through realigning both normal and tumor samples, despite typing
-has been done for the normal sample. Also realignment, in my opinion, belongs to
-pipeline. LOH detection algorithm should be simplified to serve what it is designed
-for. To have a clearer picture of what I mean, please refer to [tumor and
-normal
-scenario](https://github.com/svm-zhang/mhcflow?tab=readme-ov-file#scenario-wes-of-tumor-and-paired-normal-samples)
-below.
-
-The final realignment process splits into two steps.
-First to extract and index sample-level HLA reference.
-
-``` bash
-extractor --hla_ref abc_complete.fasta \
-  --sample NA12046 \
-  --typeres "$PWD/NA12046_class1/typer/NA12046.hla_typing.res.tsv"
-  --out "$PWD/NA12046_class1/finalizer/NA12046.hla.fasta"
-
-```
-
-Then do the realignment against this new reference.
-
-``` bash
-realigner \
-  --hla_ref "$PWD/NA12046_class1/finalizer/NA12046.hla.fasta"
-  --fqs "$PWD/NA12046_class1/fisher/NA12046.fqs.list.txt \
-  --sample NA12046 \
-  --mdup \
-  --out "$PWD/NA12046_class1/finalizer/NA12046.hla.realn.ready.bam"
-```
-
-The `--mdup` option marks PCR duplicates so that when counting coverage during
-LOH detection, duplicated reads do not get included. If you want to keep duplicates,
-simply not using this option.
+Coming soon...
