@@ -80,12 +80,57 @@ directly aligns all reads from a sequencing sample against the HLA reference.
 
 ## Realigner
 
-Coming soon...
+The realigner component takes the HLA-derived reads and re-aligns them against
+the HLA reference using `novoalign`. The realignment process can run in parallel
+when `mhcflow` is executed with a `--nproc` value greater than 1.
 
-## Typer: typing HLA class I genotype
+!!! note
+    The following options are used in the `novoalign` command line for
+    realignment: `-R 0 -r All -o FullNW`
 
-Coming soon...
+!!! note
+    The realigner component consumes most of the `mhcflow` runtime compared
+    to the other components. The number of reads processed by each realignment
+    is determined by dividing the total number of HLA-derived reads
+    by the value of `--nproc`. <br>
+    <br>
+    You can profile your workflow to determine the optimal number of reads
+    per process based on your assay and computation infrastructure. <br>
+    <br>
+    For example, in a well-profile assay, the run-to-run variation
+    in the number of DNA molecules originating from HLA genes 
+    is expected to be minimal. As a result, samples from a study targeting
+    the similar coverage are likely to yield a consistent number
+    of HLA-derived reads. Due to variation in pull-down efficiency among
+    different HLA alleles in targeted assay, it is recommended to determine
+    the optimal number of reads by profiling those samples with high counts of
+    HLA-derived reads.
+    
 
-## Finalizer: collecting results
+## Typer
 
-Coming soon...
+Please refer to the [mhctyper documentaton](https://svm-zhang.github.io/mhctyper/)
+for further details on the `typer` component.
+
+!!! note
+    Filters applied silently by `mchtyper` can be found
+    [here](https://svm-zhang.github.io/mhctyper/#filters-applied-silently)
+
+## Finalizer
+
+The `finalizer` component generates data ready for downstream analyses:
+
+- Sample-level HLA reference: HLA sequences corresponding to the typed
+    allele for each sample.
+- Sample-level HLA realignment: Realignment of HLA-derived reads against the
+    sample-level HLA reference.
+
+!!! note
+    In case of presence of homozygous genotypes, the number of reference
+    sequences in the sample-level HLA reference may not match the
+    number of rows in the typing result table.
+
+!!! note
+    The realignment output is coordinate-sorted and indexed but does not
+    have duplicates marked.
+    
