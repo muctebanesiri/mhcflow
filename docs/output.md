@@ -62,7 +62,25 @@ NA18740_class1
 
 ## realigner/
 
-## typer
+The `realigner/` directory contains realignments of reads against the HLA
+reference sequence in BAM format.
+
+``` { .sh }
+NA18740_class1
+├─ realigner/
+│  ├─ log/
+│  ├─ NA18740.hla.realn.bam
+│  ├─ NA18740.hla.realn.bam.bai
+│  ├─ NA18740.realigner.file_manifest.json
+```
+
+- `NA18740.hla.realn.bam`: This file contains the realignment result and
+    also serves as the input to the `typer` component. Realignments are
+    sorted by coordinates and indexed.
+- `NA18740.realigner.file_manifest.json`: The JSON file is the file manifest
+    for the `realigner` component.
+
+## typer/
 
 All typing results are stored in the `typer/` directory, as shown below.
 For a detailed explanation of each file, please refer to the
