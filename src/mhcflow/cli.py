@@ -55,6 +55,11 @@ def parse_cmd() -> argparse.ArgumentParser:
         help="specify minimum # of mm events (999).",
     )
     parser.add_argument(
+        "--realn-only",
+        action="store_true",
+        help="specify to use realn-only mode.",
+    )
+    parser.add_argument(
         "--nproc",
         metavar="INT",
         type=int,
