@@ -37,6 +37,11 @@ def run_mhcflow() -> int:
     realigner_fm = _run_realigner(
         args.bam, args.ref, fisher_fm_json, out_realn_dir, args.nproc
     )
+    if args.realn_only:
+        logger.info(
+            "Realgnment-only mode specified. Finished running mhcflow."
+        )
+        return 0
 
     realn_bam = realigner_fm.outputs.get("realn_bam", "")
     assert isinstance(realn_bam, str)
