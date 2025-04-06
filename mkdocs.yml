@@ -64,7 +64,11 @@ markdown_extensions:
       anchor_linenums: true
       line_spans: __span
   - pymdownx.smartsymbols
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
       combine_header_slug: true
@@ -83,4 +87,5 @@ nav:
   - Behind the scene: behind_the_scene.md
   - MHC class II: class_ii.md
   - LOH Detection: loh.md
+  - mhcflow diagram: diagram.md
   - Disclaimer: disclaimer.md
