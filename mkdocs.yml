@@ -85,7 +85,8 @@ nav:
   - Getting Started: getting_start.md
   - Explain Output: output.md
   - Behind the scene: behind_the_scene.md
+  - mhcflow Diagram: diagram.md
   - MHC class II: class_ii.md
   - LOH Detection: loh.md
-  - mhcflow diagram: diagram.md
+  - Limitation: limitation.md
   - Disclaimer: disclaimer.md
