@@ -8,6 +8,10 @@ of this page is to address the following questions:
 - Which filter(s) are used (both explicitly and implicitly)?
 - What are the limitations of the current implementation?
 
+Refer to the
+[diagram](https://svm-zhang.github.io/mhcflow/diagram/#mhcflow-Diagram)
+for an overview of `mhcflow` workflow.
+
 ## Fisher
 
 The `fisher` component extracts reads sequenced from DNA molecules originating
