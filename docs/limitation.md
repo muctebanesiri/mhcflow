@@ -15,6 +15,10 @@ coverage of the HLA regions, etc. This issue stems from the academia version of
 may introduce a `--gz` option for compression if you have access to the
 commercial version.
 
+- Starting with `v0.2.0`, individual components in `mhcflow` are no longer
+accessible via the command line as they were in `v0.1.0`. Enabling
+command-line execution for each component remains a potential future feature.
+
 - The current method for splitting the realignment workload is rather naive
 and does not guarantee balanced distribution across tasks. This imbalance
 may result in some realignment tasks waiting for one particularly
