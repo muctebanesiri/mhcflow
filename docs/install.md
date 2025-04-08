@@ -29,8 +29,8 @@ git clone -b v0.1.0 https://github.com/svm-zhang/mhcflow.git
     This difficulty is the primary reason I rewrote `mhcflow` in Python
     starting with `v0.2.0`.
 
-    If you manage to get `rattler-build` working in your environment, you
-    will need to take the following additional steps:
+    If you manage to get `rattler-build` working in your environment, you will
+    need to take the following additional steps:
 
     1. Update the `recipe.yaml` in the `v0.1.0` branch to conform to
     the `rattler-build` recipe specification.
