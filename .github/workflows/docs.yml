@@ -6,6 +6,9 @@ on:
     paths-ignore:
       - "README.md"
       - "reference/class2/**"
+      - "Dockerfile*"
+      - "requirements*.lock"
+      - .gitignore
   pull_request:
     branches:
       - main
