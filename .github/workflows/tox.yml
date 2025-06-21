@@ -8,6 +8,10 @@ on:
       - "docs/**"
       - mkdocs.yml
       - "reference/class2/**"
+      - README.md
+      - "Dockerfile*"
+      - "requirements*.lock"
+      - .gitignore
   pull_request:
     branches:
       - main
