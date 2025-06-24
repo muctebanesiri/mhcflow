@@ -56,4 +56,12 @@ ENV PATH="/opt/bin:${PATH}"
 
 RUN mkdir -p /resources
 
-CMD ["mhcflow", "-h"]
+# use a entrypoint shell script to allow for using
+# env variable to select which class reference to use.
+# see run_mhcflow.sh for details
+COPY run_mhcflow.sh /usr/local/bin/run_mhcflow.sh
+RUN chmod +x /usr/local/bin/run_mhcflow.sh
+
+ENTRYPOINT ["/usr/local/bin/run_mhcflow.sh"]
+
+CMD []
