@@ -1,0 +1,18 @@
+FROM alpine/git:latest AS ref_downloader
+
+WORKDIR /data_repo
+
+RUN git clone https://github.com/svm-zhang/mhcflow_data.git . && \
+  git lfs install && \
+  git lfs pull && \
+  rm -rf .git
+
+FROM alpine:latest
+
+WORKDIR /resources/class_i
+COPY --from=ref_downloader /data_repo/class_i/ .
+
+WORKDIR /resources/class_ii
+COPY --from=ref_downloader /data_repo/class_ii/ .
+
+CMD ["/bin/true"]
