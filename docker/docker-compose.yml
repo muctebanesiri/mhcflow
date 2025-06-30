@@ -1,0 +1,29 @@
+# docker-compose.yml
+
+services:
+  mhcflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mhcflow
+
+    depends_on:
+      mhcflow_ref:
+        condition: service_started
+
+    volumes:
+      - data_volume:/resources/class_i
+      - data_volume:/resources/class_ii
+
+  mhcflow_ref:
+    build:
+      context: .
+      dockerfile: Dockerfile.ref
+    image: mhcflow.data
+    command: ["/bin/true"]
+    volumes:
+      - data_volume:/resources/class_i
+      - data_volume:/resources/class_ii
+
+volumes:
+  data_volume:
