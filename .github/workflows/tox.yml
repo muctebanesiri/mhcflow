@@ -4,20 +4,15 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - "docs/**"
-      - mkdocs.yml
-      - "reference/class2/**"
-      - README.md
-      - "Dockerfile*"
-      - "requirements*.lock"
-      - .gitignore
+    paths:
+      - "src/**"
+      - "pyproject.toml"
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - "docs/**"
-      - mkdocs.yml
+    paths:
+      - "src/**"
+      - "pyproject.toml"
   workflow_dispatch:
 
 jobs:
