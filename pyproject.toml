@@ -22,6 +22,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Scientific/Engineering :: Bio-Informatics",
   "Topic :: Software Development :: Libraries"
 ]
@@ -46,7 +47,6 @@ mhcflow = "mhcflow:run_mhcflow"
 
 [dependency-groups]
 dev = [
-    "tox>=4.24.2",
     "mypy>=1.15.0",
     "zensical>=0.0.23",
 ]
@@ -56,7 +56,6 @@ metadata.allow-direct-references = true
 build.targets.sdist.include = [
   "/src",
   "/tests",
-  "/tox.ini"
 ]
 build.targets.wheel.packages = ["src/mhcflow"]
 build.hooks.vcs.version-file = "src/mhcflow/_version.py"
