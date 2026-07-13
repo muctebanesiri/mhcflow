@@ -55,7 +55,7 @@ def _bam2fq_from_idx(
     # each idx file will be input to samtools view -N
     qnames = idx_df["qnames"].unique().to_numpy()
     qnames_batches = np.array_split(qnames, nproc)
-    idxs = []
+    idxs: list[_PathLike] = []
     for i in range(len(qnames_batches)):
         qname_batch_fspath = outdir / f"{sm}.fisher.idxs.{i}.txt"
         pl.DataFrame({"qnames": qnames_batches[i]}).write_csv(

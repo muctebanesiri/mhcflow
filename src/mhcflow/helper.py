@@ -3,34 +3,34 @@ import json
 import sys
 from collections.abc import Sequence
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import TypeAlias
 
 from tinyscibio import BAMetadata, _PathLike, parse_path
 
 from .logger import logger
 
+_PathOrPaths: TypeAlias = _PathLike | list[_PathLike]
+
 
 @dataclass
 class FileManifest:
-    _inputs: dict[str, _PathLike | Sequence[_PathLike]] = field(
-        default_factory=dict, init=False
-    )
-    _outputs: dict[str, _PathLike | Sequence[_PathLike]] = field(
-        default_factory=dict, init=False
-    )
+    _inputs: dict[str, _PathOrPaths] = field(default_factory=dict, init=False)
+    _outputs: dict[str, _PathOrPaths] = field(default_factory=dict, init=False)
     _aux: dict[str, _PathLike] = field(default_factory=dict, init=False)
-    _intermediates: dict[str, _PathLike | Sequence[_PathLike]] = field(
+    _intermediates: dict[str, _PathOrPaths] = field(
         default_factory=dict, init=False
     )
-    _intermediate_aux: dict[str, _PathLike | Sequence[_PathLike]] = field(
+    _intermediate_aux: dict[str, _PathOrPaths] = field(
         default_factory=dict, init=False
     )
 
     @property
-    def inputs(self) -> dict[str, _PathLike | Sequence[_PathLike]]:
+    def inputs(self) -> dict[str, _PathOrPaths]:
         return self._inputs
 
     @property
-    def outputs(self) -> dict[str, _PathLike | Sequence[_PathLike]]:
+    def outputs(self) -> dict[str, _PathOrPaths]:
         return self._outputs
 
     @property
@@ -38,34 +38,26 @@ class FileManifest:
         return self._aux
 
     @property
-    def intermediate_aux(self) -> dict[str, _PathLike | Sequence[_PathLike]]:
+    def intermediate_aux(self) -> dict[str, _PathOrPaths]:
         return self._intermediate_aux
 
     @property
-    def intermediates(self) -> dict[str, _PathLike | Sequence[_PathLike]]:
+    def intermediates(self) -> dict[str, _PathOrPaths]:
         return self._intermediates
 
-    def _register_inputs(
-        self, **kwargs: _PathLike | Sequence[_PathLike]
-    ) -> None:
+    def _register_inputs(self, **kwargs: _PathOrPaths) -> None:
         self._inputs.update(**kwargs)
 
-    def _register_outputs(
-        self, **kwargs: _PathLike | Sequence[_PathLike]
-    ) -> None:
+    def _register_outputs(self, **kwargs: _PathOrPaths) -> None:
         self._outputs.update(**kwargs)
 
     def _register_aux(self, **kwargs: _PathLike) -> None:
         self._aux.update(**kwargs)
 
-    def _register_intermediate(
-        self, **kwargs: _PathLike | Sequence[_PathLike]
-    ) -> None:
+    def _register_intermediate(self, **kwargs: _PathOrPaths) -> None:
         self._intermediates.update(**kwargs)
 
-    def _register_intermediate_aux(
-        self, **kwargs: _PathLike | Sequence[_PathLike]
-    ) -> None:
+    def _register_intermediate_aux(self, **kwargs: _PathOrPaths) -> None:
         self._intermediate_aux.update(**kwargs)
 
     @classmethod
@@ -162,11 +154,14 @@ def _verify_prev_run(fm: FileManifest, overwrite: bool = False) -> bool:
 
     logger.info("Verify manifest from previous run.")
     done = parse_path(fm.aux.get("done", ""))
-    intermediate_dones = []
+    intermediate_dones: list[_PathLike] = []
     for k, v in fm.intermediate_aux.items():
         if not k.endswith("done") and not k.endswith("dones"):
             continue
-        intermediate_dones += v if isinstance(v, list) else [v]
+        if isinstance(v, list):
+            intermediate_dones.extend(v)
+        else:
+            intermediate_dones.append(v)
     not_exists = [
         str(f) for f in intermediate_dones if not parse_path(f).exists()
     ]
