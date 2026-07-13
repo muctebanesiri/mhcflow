@@ -12,6 +12,26 @@ mhcflow --bam [Genomic alignment] \
   --freq [Allele population frequency] \
   --outdir [Path ot output folder]
 ```
+
+You can also run `mhcflow` with docker:
+
+```Bash
+cd docker
+
+docker compose run \
+    -v "{local_path_to_novocraft_folder}:/opt/bin:ro" \
+    -v "{local_input_folder}:/input:ro" \
+    -v "{local_output_path}:/mhcflow/" \
+    mhcflow --bam /input/{input_bam} \
+    --outdir /mhcflow/{output_folder}
+```
+
+- `/mhcflow` is the working directory.
+- Make sure `{input_bam}` file exists under `{local_input_folder}`.
+- Make sure to mount the Novocraft folder to `/opt/bin`.
+- Use the `--rm` option to dump the container if needed.
+- If need details, check and modify the `run_mhcflow.sh` entrypoint shell script for your specific needs.
+
 ## Input
 
 
