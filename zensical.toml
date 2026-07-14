@@ -1,5 +1,5 @@
 [project]
-site_name = "mhcflow"
+site_name = "مجله"
 site_description = "Genotyping MHC class I and II alleles"
 site_author = "Simo V. Zhang"
 site_url = "https://svm-zhang.github.io/mhcflow/"
@@ -26,8 +26,8 @@ nav = [
 
 # Section for theme configuration
 [project.theme]
-font = false
-language = "en"
+font = vazirmatn
+language = "fa"
 
 features = [
   "announce.dismiss",
