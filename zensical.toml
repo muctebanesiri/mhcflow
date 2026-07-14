@@ -26,7 +26,7 @@ nav = [
 
 # Section for theme configuration
 [project.theme]
-font = false
+#font = false
 language = "fa"
 font.text = "vazirmatn"
 
