@@ -26,8 +26,9 @@ nav = [
 
 # Section for theme configuration
 [project.theme]
-font = vazirmatn
+font = false
 language = "fa"
+font.text = "vazirmatn"
 
 features = [
   "announce.dismiss",
